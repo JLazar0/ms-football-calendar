@@ -1,0 +1,56 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.1.0'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'es.jlazaro'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('springAiVersion', "2.0.0")
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir "$buildDir/generated/sources/annotationProcessor/java/main"
+		}
+	}
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation 'org.springframework.ai:spring-ai-jsoup-document-reader'
+
+	compileOnly 'org.projectlombok:lombok:1.18.36'
+	compileOnly 'org.mapstruct:mapstruct:1.6.3'
+
+	annotationProcessor 'org.projectlombok:lombok:1.18.36'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-webflux-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
